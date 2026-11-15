@@ -1,0 +1,25 @@
+[Unit]
+Description=chromium-vm: session-ack, the receipts of messages between Claude Code sessions (Tailscale address :8899)
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=session-ack
+Group=session-ack
+Environment=PYTHONUNBUFFERED=1
+Environment=SESSION_ACK_STATE=/var/lib/session-ack
+ExecStart=/usr/bin/python3 /usr/local/lib/chromium-vm/session_ack_server.py
+Restart=always
+RestartSec=3
+# Below Connection Keeper: the bond keeps the CPU first (vm-chromium tools/vmctl/README.md).
+Slice=vmsvc.slice
+MemoryMax=120M
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/session-ack
+
+[Install]
+WantedBy=multi-user.target
