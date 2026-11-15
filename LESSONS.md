@@ -8,3 +8,8 @@
 - `echo "$json"` in zsh turns `\n` inside JSON into real newlines and breaks it: feed hook test input with printf '%s' or a file.
 - ttt-relay's pattern (own system user, Tailscale-only bind, `tailscale whois` owner check) works for a non-root service:
   no token to hand out to every device.
+- A new VM service is invisible to `vmctl list` until it is in tools/vmctl/services.json of vm-chromium AND copied to
+  /etc/chromium-vm/services.json on the VM.
+- `ccmsg` finds the sending session by walking up the parent processes to ~/.claude/sessions/<pid>.json, so a worker
+  agent's sends are booked under its parent session (its hook then tells the parent about them). Test sends from a
+  worker: remove them from ~/.cache/ccmsg/sent.json afterwards, or set CCMSG_FROM.
